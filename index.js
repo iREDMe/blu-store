@@ -166,4 +166,4 @@ class Store extends Map {
 	}
 }
 
-exports.Store = Store;
+module.exports = Store;
