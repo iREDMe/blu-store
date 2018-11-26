@@ -1,5 +1,5 @@
 {
-  "name": "red-store",
+  "name": "@ired_me/red-store",
   "version": "1.0.0",
   "description": "A Map with some extra methods.",
   "main": "index.js",
