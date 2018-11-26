@@ -1,0 +1,23 @@
+{
+  "name": "red-store",
+  "version": "1.0.0",
+  "description": "A Map with some extra methods.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iREDMe/red-store.git"
+  },
+  "keywords": [
+    "store",
+    "map"
+  ],
+  "author": "iREDMe",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iREDMe/red-store/issues"
+  },
+  "homepage": "https://github.com/iREDMe/red-store#readme"
+}

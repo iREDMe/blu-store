@@ -1,0 +1,1 @@
+# Red-Store, a map with additional methods.
