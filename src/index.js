@@ -116,8 +116,12 @@ class Store extends Map {
      * and returns a new Store with the flattened
      * values.
      *
-     * @param {number} [strength=1] The strength to flatten out the values.
+     * @param {number} [strength=1] The strength to flatten out the values. Supports Infinity.
      * @returns {Store} The flattened Store.
+     * @example
+     * const store = new Store().set('hec', [1, 2, [3, 4, [5, 6]]]);
+     * E.flat(1); // [1, 2, 3, 4, [5, 6]];
+     * E.flat(2); // [1, 2, 3, 4, 5, 6]
      */
     flat(strength = 1) {
         if (strength < 1) throw new RangeError('strength must be greater than 1.');
@@ -131,12 +135,35 @@ class Store extends Map {
             for (let i = strength; i > 0; i--) {
                 if (!toFlat.array().some(val => Array.isArray(val) ? val.some(v => Array.isArray(v)) : false)) i = 0;
                 for (const [key, value] of toFlat) {
-                    if (Array.isArray(value)) toFlat.set(key, value.reduce((acc, val) => acc.concat(val), []));
-                    else return;
+                    if (Array.isArray(value)) toFlat.set(key, [].concat(...value));
                 }
             }
         }
 
+        return toFlat;
+    }
+
+    /**
+     * Maps throughout the store, then flattens out
+     * each value by a strength of 1.
+     *
+     * @param {Function} func The function to pass to map.
+     * @param {*} bind The value to bind 'this' to the passed func.
+     * @returns {Store} A store containing the mapped contents.
+     */
+    flatMap(func, bind) {
+        if (typeof func !== 'function') throw new TypeError('func must be a Function.');
+        if (typeof bind !== 'undefined') func = func.bind(bind);
+        const toFlat = this.clone();
+
+        if (!this.array().some(v => Array.isArray(v))) return toFlat;
+        if (Array.prototype.flatMap) {
+            const mapped = toFlat.map((value, key) => [key, Array.isArray(value) ? value.flatMap(func, bind) : value]);
+            for (const [key, value] of mapped) toFlat.set(key, value);
+        } else {
+            const mapped = toFlat.map((value, key) => [key, Array.isArray(value) ? [].concat(func(value, bind)) : value]);
+            for (const [key, value] of mapped) toFlat.set(key, value);
+        }
         return toFlat;
     }
 
