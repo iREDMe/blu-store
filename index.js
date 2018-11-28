@@ -109,7 +109,28 @@ class Store extends Map {
 		const mapped = [];
 		for (const [key, value] of this) mapped.push(func(value, key, this));
 		return mapped;
-	}
+    }
+
+    /**
+     * Flattens out the array values of the Store,
+     * and returns a new Store with the flattened
+     * values.
+     *
+     * @param {number} [strength=1] The strength to flatten out the values.
+     * @returns {Store} The flattened Store.
+     */
+    flat(strength = 1) {
+        const toFlat = this.clone();
+
+        for (let i = strength; i > 0; i--) {
+            for (const [key, value] of toFlat) {
+                if (Array.isArray(value)) toFlat.set(key, value.reduce((acc, val) => acc.concat(val), []));
+                else return;
+            }
+        }
+
+        return toFlat;
+    }
 
     /**
      * Retrives a random value of the Store.
