@@ -120,9 +120,12 @@ class Store extends Map {
      * @returns {Store} The flattened Store.
      */
     flat(strength = 1) {
+        if (strength < 1) throw new RangeError('strength must be greater than 1.');
         const toFlat = this.clone();
+        if (!this.array().some(v => Array.isArray(v))) return toFlat;
 
         for (let i = strength; i > 0; i--) {
+            if (!toFlat.array().some(val => Array.isArray(val) ? val.some(v => Array.isArray(v)) : false)) i = 0;
             for (const [key, value] of toFlat) {
                 if (Array.isArray(value)) toFlat.set(key, value.reduce((acc, val) => acc.concat(val), []));
                 else return;

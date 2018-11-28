@@ -10,6 +10,7 @@ declare module '@ired_me/red-store' {
 		public keyArray(): K[];
 		public lastIndexOf(key: K, fromIndex?: number): number;
 		public map<T>(func: (v: V, k: K, s: Store<K, V>) => T, bind?: any): T[];
+		public flat(strength?: number): Store<K, V>;
 		public random(): V;
 		public randomKey(): K;
 		public randomPair(): (K | V)[];
