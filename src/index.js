@@ -112,6 +112,22 @@ class Store extends Map {
     }
 
     /**
+     * The first value of the Store.
+     * @type {*}
+     */
+    first() {
+        return this.array()[0];
+    }
+
+    /**
+     * The first key of the Store.
+     * @type {*}
+     */
+    firstKey() {
+        return this.keyArray()[0];
+    }
+
+    /**
      * Flattens out the array values of the Store,
      * and returns a new Store with the flattened
      * values.
@@ -165,6 +181,22 @@ class Store extends Map {
             for (const [key, value] of mapped) toFlat.set(key, value);
         }
         return toFlat;
+    }
+
+    /**
+     * The last value of the Store.
+     * @type {*}
+     */
+    last() {
+        return this.array()[this.array().length - 1];
+    }
+
+    /**
+     * The last value of the Store.
+     * @type {*}
+     */
+    lastKey() {
+        return this.keyArray()[this.keyArray().length - 1];
     }
 
     /**
