@@ -14,7 +14,7 @@ declare module '@ired_me/red-store' {
 		public flatMap(func: (v: V, k: K) => any[], bind: any): Store<K, V>;
 		public random(): V;
 		public randomKey(): K;
-		public randomPair(): (K | V)[];
+		public randomPair(): [K, V]
 		public split(func: (v: V, k: K, s: Store<K, V>) => boolean, bind?: any): [Store<K, V>, Store<K, V>];
 	}
 }
