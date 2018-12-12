@@ -71,6 +71,7 @@ class Store extends Map {
      * @returns {number} The key's index; -1 if not found.
      */
 	indexOf(key, fromIndex = 0) {
+        if (this.size === 0) return -1;
 		return this.keyArray().indexOf(key, fromIndex);
 	}
 
@@ -91,6 +92,7 @@ class Store extends Map {
      * @returns {number} The key's index; -1 if not found.
      */
 	lastIndexOf(key, fromIndex = this.size - 1) {
+        if (this.size === 0) return -1;
 		return this.keyArray().lastIndexOf(key, fromIndex);
 	}
 
@@ -188,7 +190,7 @@ class Store extends Map {
      * @type {*}
      */
     last() {
-        return this.array()[this.array().length - 1];
+        return this.array()[this.size - 1];
     }
 
     /**
@@ -196,7 +198,7 @@ class Store extends Map {
      * @type {*}
      */
     lastKey() {
-        return this.keyArray()[this.keyArray().length - 1];
+        return this.keyArray()[this.size - 1];
     }
 
     /**
