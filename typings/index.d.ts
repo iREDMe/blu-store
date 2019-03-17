@@ -15,7 +15,7 @@ declare module '@ired_me/red-store' {
 		public last(): V;
 		public lastKey(): K;
 		public lastIndexOf(key: K, fromIndex?: number): number;
-		public map<T>(func: (v: V, k: K, s: Store<K, V>) => T, bind?: any): T[];
+		public map<T>(callback: (v: V, k: K, index: number, s: Store<K, V>) => T, thisArg?: any): T[];
 		public random(): V;
 		public randomKey(): K;
 		public randomPair(): [K, V]

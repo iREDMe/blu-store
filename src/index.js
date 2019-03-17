@@ -20,7 +20,7 @@ class Store extends Map {
      * @returns {Store}
      */
 	clone() {
-		return new this.constructor[Symbol.species](this);
+		return new Store(this);
 	}
 
     /**
@@ -53,7 +53,7 @@ class Store extends Map {
 	filter(func, bind) {
 		if (typeof func !== 'function') throw new TypeError('func must be a function.');
 		if (typeof bind !== 'undefined') func = func.bind(bind);
-		const filtered = new this.constructor[Symbol.species]();
+		const filtered = new Store();
 
 		for (const [key, value] of this) {
 			if (func(value, key, this)) filtered.set(key, value);
@@ -100,17 +100,21 @@ class Store extends Map {
      * Maps each and every value in the Store, and returns
      * an array containing the new values.
      *
-     * @param {Function} func The function to run for each value and key in the Store.
-     * @param {*} [bind] The variable to bind func's ``this`` value.
+     * @param {Function} callback The function to run for each value and key in the Store.
+     * @param {*} [thisArg] The variable to bind func's ``this`` value.
      * @returns {Array} The mapped values.
      */
-	map(func, bind) {
-		if (typeof func !== 'function') throw new TypeError('func must be a function.');
-		if (typeof bind !== 'undefined') func = func.bind(bind);
+	map(callback, thisArg) {
+		if (typeof callback !== 'function') throw new TypeError();
+		if (typeof thisArg !== 'undefined') callback.bind(thisArg);
 
-		const mapped = [];
-		for (const [key, value] of this) mapped.push(func(value, key, this));
-		return mapped;
+		const arr = [];
+		let index = 0;
+		for (const [key, value] of this) {
+			arr.push(callback(value, key, index, this));
+			index++;
+		}
+		return arr;
     }
 
     /**
@@ -247,7 +251,7 @@ class Store extends Map {
 		if (typeof func !== 'function') throw new TypeError('func must be a Function.');
 		if (typeof bind !== 'undefined') func = func.bind(bind);
 
-		const [first, second] = [new this.constructor[Symbol.species](), new this.constructor[Symbol.species]()];
+		const [first, second] = [new Store(), new Store()];
 		for (const [key, value] of this) {
 			if (func(value, key, this)) first.set(key, value);
 			else second.set(key, value);
