@@ -39,8 +39,8 @@ class Store extends Map {
      * Filters the store using a passed function, and
      * returns a new Store including the filtered values.
      *
-     * @param {Function} func The provided function to test against the Store.
-     * @param {*} [bind] The value to bind to func's "this" value.
+     * @param {Function} callback The provided function to test against the Store.
+     * @param {*} [bind] The variable to bind the callback's `this` value.
      * @returns {Store} The new Store containing the filtered contents.
      * @example
      * getBots()
@@ -50,13 +50,14 @@ class Store extends Map {
      *     })
      *     .catch(console.error);
      */
-	filter(func, bind) {
-		if (typeof func !== 'function') throw new TypeError('func must be a function.');
-		if (typeof bind !== 'undefined') func = func.bind(bind);
-		const filtered = new Store();
+	filter(callback, thisArg) {
+		if (typeof callback !== 'function') throw new TypeError('callback must be a function.');
+		if (typeof thisArg !== 'undefined') callback = callback.bind(thisArg);
 
+		const filtered = new Store();
+		let index = 0;
 		for (const [key, value] of this) {
-			if (func(value, key, this)) filtered.set(key, value);
+			if (callback(value, key, index++, this)) filtered.set(key, value);
 		}
 
 		return filtered;
@@ -101,18 +102,17 @@ class Store extends Map {
      * an array containing the new values.
      *
      * @param {Function} callback The function to run for each value and key in the Store.
-     * @param {*} [thisArg] The variable to bind func's ``this`` value.
+     * @param {*} [thisArg] The variable to bind the callback's `this` value.
      * @returns {Array} The mapped values.
      */
 	map(callback, thisArg) {
-		if (typeof callback !== 'function') throw new TypeError();
-		if (typeof thisArg !== 'undefined') callback.bind(thisArg);
+		if (typeof callback !== 'function') throw new TypeError('callback must be a function');
+		if (typeof thisArg !== 'undefined') callback = callback.bind(thisArg);
 
 		const arr = [];
 		let index = 0;
 		for (const [key, value] of this) {
-			arr.push(callback(value, key, index, this));
-			index++;
+			arr.push(callback(value, key, index++, this));
 		}
 		return arr;
     }
@@ -169,21 +169,21 @@ class Store extends Map {
      * Maps throughout the store, then flattens out
      * each value by a strength of 1.
      *
-     * @param {Function} func The function to pass to map.
-     * @param {*} bind The value to bind 'this' to the passed func.
+     * @param {Function} callback The function to pass to map.
+     * @param {*} [thisArg] The value to bind the callback's `this` value
      * @returns {Store} A store containing the mapped contents.
      */
-    flatMap(func, bind) {
-        if (typeof func !== 'function') throw new TypeError('func must be a Function.');
-        if (typeof bind !== 'undefined') func = func.bind(bind);
+    flatMap(callback, bind) {
+        if (typeof callback !== 'function') throw new TypeError('callback must be a Function.');
+        if (typeof bind !== 'undefined') callback = callback.bind(bind);
         const toFlat = this.clone();
 
         if (!this.array().some(v => Array.isArray(v))) return toFlat;
         if (Array.prototype.flatMap) {
-            const mapped = toFlat.map((value, key) => [key, Array.isArray(value) ? value.flatMap(func, bind) : value]);
+            const mapped = toFlat.map((value, key) => [key, Array.isArray(value) ? value.flatMap(callback, bind) : value]);
             for (const [key, value] of mapped) toFlat.set(key, value);
         } else {
-            const mapped = toFlat.map((value, key) => [key, Array.isArray(value) ? [].concat(func(value, bind)) : value]);
+            const mapped = toFlat.map((value, key) => [key, Array.isArray(value) ? [].concat(callback(value, bind)) : value]);
             for (const [key, value] of mapped) toFlat.set(key, value);
         }
         return toFlat;
@@ -240,21 +240,25 @@ class Store extends Map {
      * Splits the Store into two stores based on a function that
      * testifies each pair in the Store, those that pass to the
      * first Store and those that fail in the second Store.
-     * @param {Function} func The function passed to testify.
-     * @param {*} [bind] The value to bind func's "this" value.
+     * @param {Function} callback The function passed to testify.
+     * @param {*} [thisArg] The value to bind the callback's `this` value.
      * @returns {Store[]}
      * @example
      * const [approvedBots, unapprovedBots] = Client.bots.split(bot => bot.isApproved);
      * console.log(`The total of approved bots are ${approvedBots.size}, with ${unapprovedBots.size} being unapproved!`)
      */
-	split(func, bind) {
-		if (typeof func !== 'function') throw new TypeError('func must be a Function.');
-		if (typeof bind !== 'undefined') func = func.bind(bind);
+	split(callback, thisArg) {
+		if (typeof callback !== 'function') throw new TypeError('callback must be a Function.');
+		if (typeof thisArg !== 'undefined') callback = callback.bind(thisArg);
 
 		const [first, second] = [new Store(), new Store()];
+		let index = 0;
 		for (const [key, value] of this) {
-			if (func(value, key, this)) first.set(key, value);
-			else second.set(key, value);
+			if (callback(value, key, index++, this)) {
+				first.set(key, value);
+			} else {
+				second.set(key, value);
+			}
 		}
 		return [first, second];
 	}
