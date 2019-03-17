@@ -43,9 +43,9 @@ class Store extends Map {
      * @param {*} [bind] The value to bind to func's "this" value.
      * @returns {Store} The new Store containing the filtered contents.
      * @example
-     * Client.fetchAllBots()
+     * getBots()
      *     .then(bots => {
-     *         const onlyApproved = bots.filter(bot => bot.isApproved);
+     *         const onlyApproved = bots.filter(bot => bot.approved);
      *         console.log(`${onlyApproved.size} bots are approved.`);
      *     })
      *     .catch(console.error);
