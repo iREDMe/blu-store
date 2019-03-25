@@ -1,3 +1,5 @@
+const util = require('util'); // eslint-disable-line no-unused-vars
+
 /**
  * A storage class that includes additional methods.
  * @class
@@ -138,6 +140,7 @@ class Store extends Map {
      * and returns a new Store with the flattened
      * values.
      *
+     * @deprecated
      * @param {number} [strength=1] The strength to flatten out the values. Supports Infinity.
      * @returns {Store} The flattened Store.
      * @example
@@ -169,6 +172,7 @@ class Store extends Map {
      * Maps throughout the store, then flattens out
      * each value by a strength of 1.
      *
+     * @deprecated
      * @param {Function} callback The function to pass to map.
      * @param {*} [thisArg] The value to bind the callback's `this` value
      * @returns {Store} A store containing the mapped contents.
@@ -263,5 +267,8 @@ class Store extends Map {
 		return [first, second];
 	}
 }
+
+Store.prototype.flat = util.deprecate(Store.prototype.flat, 'Will be removed in a future release');
+Store.prototype.flatMap = util.deprecate(Store.prototype.flatMap, 'Will be removed in a future release');
 
 module.exports = Store;

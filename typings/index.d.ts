@@ -8,8 +8,6 @@ declare module '@ired_me/red-store' {
 		public filter(func: (value: V, key: K, index: number, store: this) => boolean, bind?: any): Store<K, V>;
 		public first(): V;
 		public firstKey(): K;
-		public flat(strength?: number): Store<K, V>;
-		public flatMap(func: () => any[], bind: any): Store<K, V>;
 		public indexOf(key: K, fromIndex?: number): number;
 		public keyArray(): K[];
 		public last(): V;
@@ -18,7 +16,12 @@ declare module '@ired_me/red-store' {
 		public map<T>(callback: (value: V, key: K, index: number, store: this) => T, thisArg?: any): T[];
 		public random(): V;
 		public randomKey(): K;
-		public randomPair(): [K, V]
+		public randomPair(): [K, V];
 		public split(callback: (value: V, key: K, index: number, store: this) => boolean, thisArg?: any): [Store<K, V>, Store<K, V>];
+
+		/** **DEPRECATED** */
+		public flat(strength?: number): Store<K, V>;
+		/** **DEPRECATED** */
+		public flatMap(func: () => any[], bind: any): Store<K, V>;
 	}
 }
