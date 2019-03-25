@@ -234,10 +234,7 @@ class Store extends Map {
      */
 	randomPair() {
 		const key = this.randomKey();
-		const pair = [];
-
-		pair.push(key, this.get(key));
-		return pair;
+		return [key, this.get(key)];
 	}
 
     /**
