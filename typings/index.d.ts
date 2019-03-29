@@ -1,4 +1,4 @@
-declare module '@ired_me/red-store' {
+declare module 'blu-store' {
 	export = Store;
 
 	class Store<K, V> extends Map<K, V> {

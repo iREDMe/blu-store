@@ -8,7 +8,8 @@ const util = require('util'); // eslint-disable-line no-unused-vars
 class Store extends Map {
 	constructor(iterable) {
 		super(iterable);
-	}
+    }
+
     /**
      * Returns all the values of the Store in an array.
      * @returns {Array} The array of the Store's values.
